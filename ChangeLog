@@ -1,3 +1,9 @@
+2014-07-12  Jeremy Bennett  <jeremy.bennett@embecosm.com>
+
+	* git-copy-tags.sh: Created.
+	* git-migrate.sh: Clean up minor typos.
+	* README.md: Updated for tag migration.
+
 2014-07-10  Jeremy Bennett  <jeremy.bennett@embecosm.com>
 
 	Initial version for public use

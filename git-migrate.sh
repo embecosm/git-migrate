@@ -53,15 +53,16 @@
 
 # --working-dir <dirname>
 
-#     The working directory for the repositories, relative to the parent
-#     directory of the repository containing this git-migrate.sh script. If it
-#     does not exist it will be created. If not specified a directory will be
-#     created and reported.
+#     The working directory for the repositories. It is relative to the first
+#     parent of the directory from which this script is run which is not part
+#     of a git repository. If it does not exist it will be created. If not
+#     specified a directory will be created and reported.
 
 # --script <filename>
 
-#     Name of the sript file to be generated. It will be created relative to
-#     the working directory. If not specified, the name "doit.sh" will be used.
+#     Name of the script file to be generated. It will be created relative to
+#     the working directory. If not specified, the name "doit.sh" will be
+#     used.
 
 # --old-upstream <url>
 
@@ -320,6 +321,7 @@ force_cherry_pick () {
     sf_do    "fi"
 }
 
+
 #------------------------------------------------------------------------------
 #
 #			      Argument handling
@@ -457,7 +459,7 @@ then
     exit 1
 fi
 
-chmod ugo+x doit.sh
+chmod ugo+x ${sf}
 echo "Script file is ${sf}"
 
 # Initialize the script file
@@ -486,7 +488,7 @@ cat > ${sf} <<EOF
 
 # Sort out logfile
 logfile=\${1-/tmp/log}
-echo "Logging to ${logfile}"
+echo "Logging to \${logfile}"
 
 # Function to echo its argument to both console and logfile
 
@@ -531,7 +533,7 @@ check_not_in_repo new-local ${local_branch}
 
 #------------------------------------------------------------------------------
 #
-#				Create script
+#		      Create script for copying branches
 #
 #------------------------------------------------------------------------------
 
@@ -649,6 +651,12 @@ sf_dolog "    git checkout old-local/${local_branch} \${f}"
 sf_do    "done"
 sf_dolog "git commit \\"
 sf_dolog "    -m \"Final tidy up of files from transfer to new repository\""
+
+#------------------------------------------------------------------------------
+#
+#				 Closing info
+#
+#------------------------------------------------------------------------------
 
 # Now propose the push
 sf_logit "" ""

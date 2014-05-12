@@ -124,3 +124,59 @@ latter case the repos must have the names "old-upstream", "new-upstream",
                      --new-local git@github.com:openrisc/or1k-binutils-gdb.git \
                      --upstream-branch master \
                      --local-branch upstream-rebase-20130930
+
+The script to transfer the branches generated will be called `doit.sh` in the
+gm-wd-gdb. It takes an optional argument, the name of a log file (default
+/tmp/log).
+
+## Transferring tags
+
+Once all the branches are transferred, it is necessary to transfer tags. A
+separate script is provided for this, `git-copy-tags.sh`:
+
+    ./git-copy-tags.sh [--working-dir <dirname>]
+                       [--script <filename>]
+                       [--suffix <suffix>]
+                       [-h|--help]
+
+This will copy all the tags that exist only in the `old-local` repository to the
+equivalent location in the `new-local` repository.
+
+* `--working-dir` _dirname_
+
+    The working directory for the repositories, relative to the parent
+    directory of the repository containing this _git-migrate.sh_ script. If it
+    does not exist it will be created. If not specified a directory will be
+    created and reported.
+
+* `--script` _filename_
+
+    Name of the script file to be generated. It will be created relative to
+    the working directory. If not specified, the name `doit-tags.sh` will be
+    used.
+
+* `--suffix` _suffix_
+
+    It may be necessary to rename tags, to avoid clashes (for example
+    combining binutils and gdb into binutils-gdb may lead to duplicate
+    tags. This argument is used to add a suffix to the new tab name.
+
+* `--help`
+* `-h`
+
+    Report on usage.
+
+Running the script `doit-tags.sh` will then transfer all the tags. It takes an
+optional single argument, the name of a logfile (default `/tmp.log-tags`).
+
+When bringing together two repositories into one (for example gdb and binutils
+into binutils-gdb) it is possible that there may be tags which cause a
+clash. To get round this, the `--suffix` argument allows a suffix to be
+appended to the tag name.
+
+So if the branches from binutils had been migrated in a directory `gm-wd-binutils`
+and the branches from GDB in a directory `gm-wd-gdb`, we might use the following
+two commands to transfer all the tags:
+
+    ./git-copy-tags.sh --working-dir gm-wd-binutils
+    ./git-copy-tags.sh --working-dir gm-wd-gdb --suffix "-gdb"
